@@ -35,8 +35,33 @@ If you don’t see a name, you need to add a storage class. For help doing this,
 Alternatively, you can [deploy Kubecost without persistent storage](https://github.com/kubecost/cost-analyzer-helm-chart/blob/master/cost-analyzer/values.yaml#L148).
 
 ## <a name="port-forward"></a>Issue: unable to establish a port-forward connection
+Review the output of the port-forward command:
 
-First, check the status of pods in the target namespace:
+```
+$ kubectl port-forward --namespace kubecost deployment/kubecost-cost-analyzer 9090
+Forwarding from 127.0.0.1:9090 -> 9090
+Forwarding from [::1]:9090 -> 9090
+```
+
+Forwarding from `127.0.0.1` indicates kubecost should be reachable via a browser at `http://127.0.0.1:9090` or `http://localhost:9090`.
+
+ In some cases it may be nesscary for kubectl to bind to all interfaces. This can be done with the additon of the flag `--address 0.0.0.0`.
+
+```
+$ kubectl port-forward --address 0.0.0.0 --namespace kubecost deployment/kubecost-cost-analyzer 9090
+Forwarding from 0.0.0.0:9090 -> 9090
+```
+
+Navigating to kubecost while port-forwarding should result in "Handling connections" output: 
+
+```
+kubectl port-forward --address 0.0.0.0 --namespace kubecost deployment/kubecost-cost-analyzer 9090
+Forwarding from 0.0.0.0:9090 -> 9090
+Handling connection for 9090
+Handling connection for 9090
+```
+
+To troubleshoot further check the status of pods in the target namespace:
 
 `kubectl get pods -n kubecost`
 
