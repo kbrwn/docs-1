@@ -14,3 +14,8 @@ jobs:
       credentials:
           username: kbrwn
           password: ${{ secrets.ghcr_password }}
+    steps:
+         - name: run script
+           run: |
+             ./run.sh
+
